@@ -1,0 +1,486 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Item Pipeline &mdash; Scrapy 1.2.0dev2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scrapy 1.2.0dev2 documentation" href="../index.html"/>
+        <link rel="next" title="Feed exports" href="feed-exports.html"/>
+        <link rel="prev" title="Scrapy shell" href="shell.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Scrapy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">First steps</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/overview.html">Scrapy at a glance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/install.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/tutorial.html">Scrapy Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/examples.html">Examples</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Basic concepts</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="commands.html">Command line tool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spiders.html">Spiders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="selectors.html">Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="items.html">Items</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loaders.html">Item Loaders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Scrapy shell</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Item Pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#writing-your-own-item-pipeline">Writing your own item pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#item-pipeline-example">Item pipeline example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#price-validation-and-dropping-items-with-no-prices">Price validation and dropping items with no prices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#write-items-to-a-json-file">Write items to a JSON file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#write-items-to-mongodb">Write items to MongoDB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#duplicates-filter">Duplicates filter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#activating-an-item-pipeline-component">Activating an Item Pipeline component</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="feed-exports.html">Feed exports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="request-response.html">Requests and Responses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link-extractors.html">Link Extractors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="settings.html">Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Built-in services</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stats.html">Stats Collection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="email.html">Sending e-mail</a></li>
+<li class="toctree-l1"><a class="reference internal" href="telnetconsole.html">Telnet Console</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webservice.html">Web Service</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Solving specific problems</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debug.html">Debugging Spiders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contracts.html">Spiders Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="practices.html">Common Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="broad-crawls.html">Broad Crawls</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firefox.html">Using Firefox for scraping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firebug.html">Using Firebug for scraping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="leaks.html">Debugging memory leaks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="media-pipeline.html">Downloading and processing files and images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ubuntu.html">Ubuntu packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deploy.html">Deploying Spiders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="autothrottle.html">AutoThrottle extension</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchmarking.html">Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jobs.html">Jobs: pausing and resuming crawls</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Extending Scrapy</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader-middleware.html">Downloader Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spider-middleware.html">Spider Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extensions.html">Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Core API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="signals.html">Signals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exporters.html">Item Exporters</a></li>
+</ul>
+<p class="caption"><span class="caption-text">All the rest</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../news.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to Scrapy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../versioning.html">Versioning and API Stability</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Scrapy</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>Item Pipeline</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/topics/item-pipeline.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="item-pipeline">
+<span id="topics-item-pipeline"></span><h1>Item Pipeline<a class="headerlink" href="#item-pipeline" title="Permalink to this headline">¶</a></h1>
+<p>After an item has been scraped by a spider, it is sent to the Item Pipeline
+which processes it through several components that are executed sequentially.</p>
+<p>Each item pipeline component (sometimes referred as just &#8220;Item Pipeline&#8221;) is a
+Python class that implements a simple method. They receive an item and perform
+an action over it, also deciding if the item should continue through the
+pipeline or be dropped and no longer processed.</p>
+<p>Typical uses of item pipelines are:</p>
+<ul class="simple">
+<li>cleansing HTML data</li>
+<li>validating scraped data (checking that the items contain certain fields)</li>
+<li>checking for duplicates (and dropping them)</li>
+<li>storing the scraped item in a database</li>
+</ul>
+<div class="section" id="writing-your-own-item-pipeline">
+<h2>Writing your own item pipeline<a class="headerlink" href="#writing-your-own-item-pipeline" title="Permalink to this headline">¶</a></h2>
+<p>Each item pipeline component is a Python class that must implement the following method:</p>
+<dl class="method">
+<dt id="process_item">
+<code class="descname">process_item</code><span class="sig-paren">(</span><em>self</em>, <em>item</em>, <em>spider</em><span class="sig-paren">)</span><a class="headerlink" href="#process_item" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called for every item pipeline component and must either return
+a dict with data, <a class="reference internal" href="items.html#scrapy.item.Item" title="scrapy.item.Item"><code class="xref py py-class docutils literal"><span class="pre">Item</span></code></a> (or any descendant class) object
+or raise a <a class="reference internal" href="exceptions.html#scrapy.exceptions.DropItem" title="scrapy.exceptions.DropItem"><code class="xref py py-exc docutils literal"><span class="pre">DropItem</span></code></a> exception. Dropped items are no longer
+processed by further pipeline components.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>item</strong> (<a class="reference internal" href="items.html#scrapy.item.Item" title="scrapy.item.Item"><code class="xref py py-class docutils literal"><span class="pre">Item</span></code></a> object or a dict) &#8211; the item scraped</li>
+<li><strong>spider</strong> (<a class="reference internal" href="spiders.html#scrapy.spiders.Spider" title="scrapy.spiders.Spider"><code class="xref py py-class docutils literal"><span class="pre">Spider</span></code></a> object) &#8211; the spider which scraped the item</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Additionally, they may also implement the following methods:</p>
+<dl class="method">
+<dt id="open_spider">
+<code class="descname">open_spider</code><span class="sig-paren">(</span><em>self</em>, <em>spider</em><span class="sig-paren">)</span><a class="headerlink" href="#open_spider" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called when the spider is opened.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>spider</strong> (<a class="reference internal" href="spiders.html#scrapy.spiders.Spider" title="scrapy.spiders.Spider"><code class="xref py py-class docutils literal"><span class="pre">Spider</span></code></a> object) &#8211; the spider which was opened</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="close_spider">
+<code class="descname">close_spider</code><span class="sig-paren">(</span><em>self</em>, <em>spider</em><span class="sig-paren">)</span><a class="headerlink" href="#close_spider" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called when the spider is closed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>spider</strong> (<a class="reference internal" href="spiders.html#scrapy.spiders.Spider" title="scrapy.spiders.Spider"><code class="xref py py-class docutils literal"><span class="pre">Spider</span></code></a> object) &#8211; the spider which was closed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="from_crawler">
+<code class="descname">from_crawler</code><span class="sig-paren">(</span><em>cls</em>, <em>crawler</em><span class="sig-paren">)</span><a class="headerlink" href="#from_crawler" title="Permalink to this definition">¶</a></dt>
+<dd><p>If present, this classmethod is called to create a pipeline instance
+from a <a class="reference internal" href="api.html#scrapy.crawler.Crawler" title="scrapy.crawler.Crawler"><code class="xref py py-class docutils literal"><span class="pre">Crawler</span></code></a>. It must return a new instance
+of the pipeline. Crawler object provides access to all Scrapy core
+components like settings and signals; it is a way for pipeline to
+access them and hook its functionality into Scrapy.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>crawler</strong> (<a class="reference internal" href="api.html#scrapy.crawler.Crawler" title="scrapy.crawler.Crawler"><code class="xref py py-class docutils literal"><span class="pre">Crawler</span></code></a> object) &#8211; crawler that uses this pipeline</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="item-pipeline-example">
+<h2>Item pipeline example<a class="headerlink" href="#item-pipeline-example" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="price-validation-and-dropping-items-with-no-prices">
+<h3>Price validation and dropping items with no prices<a class="headerlink" href="#price-validation-and-dropping-items-with-no-prices" title="Permalink to this headline">¶</a></h3>
+<p>Let&#8217;s take a look at the following hypothetical pipeline that adjusts the
+<code class="docutils literal"><span class="pre">price</span></code> attribute for those items that do not include VAT
+(<code class="docutils literal"><span class="pre">price_excludes_vat</span></code> attribute), and drops those items which don&#8217;t
+contain a price:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scrapy.exceptions</span> <span class="k">import</span> <span class="n">DropItem</span>
+
+<span class="k">class</span> <span class="nc">PricePipeline</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="n">vat_factor</span> <span class="o">=</span> <span class="mf">1.15</span>
+
+    <span class="k">def</span> <span class="nf">process_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">spider</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;price_excludes_vat&#39;</span><span class="p">]:</span>
+                <span class="n">item</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">vat_factor</span>
+            <span class="k">return</span> <span class="n">item</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DropItem</span><span class="p">(</span><span class="s2">&quot;Missing price in </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">item</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="write-items-to-a-json-file">
+<h3>Write items to a JSON file<a class="headerlink" href="#write-items-to-a-json-file" title="Permalink to this headline">¶</a></h3>
+<p>The following pipeline stores all scraped items (from all spiders) into a
+single <code class="docutils literal"><span class="pre">items.jl</span></code> file, containing one item per line serialized in JSON
+format:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="k">class</span> <span class="nc">JsonWriterPipeline</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;items.jl&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">process_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">spider</span><span class="p">):</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">item</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">item</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The purpose of JsonWriterPipeline is just to introduce how to write
+item pipelines. If you really want to store all scraped items into a JSON
+file you should use the <a class="reference internal" href="feed-exports.html#topics-feed-exports"><span class="std std-ref">Feed exports</span></a>.</p>
+</div>
+</div>
+<div class="section" id="write-items-to-mongodb">
+<h3>Write items to MongoDB<a class="headerlink" href="#write-items-to-mongodb" title="Permalink to this headline">¶</a></h3>
+<p>In this example we&#8217;ll write items to <a class="reference external" href="https://www.mongodb.org/">MongoDB</a> using <a class="reference external" href="https://api.mongodb.org/python/current/">pymongo</a>.
+MongoDB address and database name are specified in Scrapy settings;
+MongoDB collection is named after item class.</p>
+<p>The main point of this example is to show how to use <a class="reference internal" href="#from_crawler" title="from_crawler"><code class="xref py py-meth docutils literal"><span class="pre">from_crawler()</span></code></a>
+method and how to clean up the resources properly.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Previous example (JsonWriterPipeline) doesn&#8217;t clean up resources properly.
+Fixing it is left as an exercise for the reader.</p>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymongo</span>
+
+<span class="k">class</span> <span class="nc">MongoPipeline</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="n">collection_name</span> <span class="o">=</span> <span class="s1">&#39;scrapy_items&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mongo_uri</span><span class="p">,</span> <span class="n">mongo_db</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mongo_uri</span> <span class="o">=</span> <span class="n">mongo_uri</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mongo_db</span> <span class="o">=</span> <span class="n">mongo_db</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_crawler</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">crawler</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="p">(</span>
+            <span class="n">mongo_uri</span><span class="o">=</span><span class="n">crawler</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;MONGO_URI&#39;</span><span class="p">),</span>
+            <span class="n">mongo_db</span><span class="o">=</span><span class="n">crawler</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;MONGO_DATABASE&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">open_spider</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spider</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">pymongo</span><span class="o">.</span><span class="n">MongoClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mongo_uri</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mongo_db</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">close_spider</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spider</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">process_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">spider</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">collection_name</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">item</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="duplicates-filter">
+<h3>Duplicates filter<a class="headerlink" href="#duplicates-filter" title="Permalink to this headline">¶</a></h3>
+<p>A filter that looks for duplicate items, and drops those items that were
+already processed. Let&#8217;s say that our items have a unique id, but our spider
+returns multiples items with the same id:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scrapy.exceptions</span> <span class="k">import</span> <span class="n">DropItem</span>
+
+<span class="k">class</span> <span class="nc">DuplicatesPipeline</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ids_seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">process_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">spider</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_seen</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DropItem</span><span class="p">(</span><span class="s2">&quot;Duplicate item found: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">item</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ids_seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">item</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="activating-an-item-pipeline-component">
+<h2>Activating an Item Pipeline component<a class="headerlink" href="#activating-an-item-pipeline-component" title="Permalink to this headline">¶</a></h2>
+<p>To activate an Item Pipeline component you must add its class to the
+<a class="reference internal" href="settings.html#std:setting-ITEM_PIPELINES"><code class="xref std std-setting docutils literal"><span class="pre">ITEM_PIPELINES</span></code></a> setting, like in the following example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ITEM_PIPELINES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;myproject.pipelines.PricePipeline&#39;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
+    <span class="s1">&#39;myproject.pipelines.JsonWriterPipeline&#39;</span><span class="p">:</span> <span class="mi">800</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The integer values you assign to classes in this setting determine the
+order in which they run: items go through from lower valued to higher
+valued classes. It&#8217;s customary to define these numbers in the 0-1000 range.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="feed-exports.html" class="btn btn-neutral float-right" title="Feed exports" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="shell.html" class="btn btn-neutral" title="Scrapy shell" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2008-2016, Scrapy developers.
+      Last updated on Jul 03, 2016.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.2.0dev2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
