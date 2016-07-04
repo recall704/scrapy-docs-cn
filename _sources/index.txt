@@ -6,6 +6,8 @@ Scrapy |version| documentation
 
 This documentation contains everything you need to know about Scrapy.
 
+本文档包含了 scrapy 中你所需要了解的一切。
+
 Getting help(获得帮助)
 ======================
 
